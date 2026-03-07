@@ -53,6 +53,18 @@ public:
     }
 
     /**
+     * @brief Construtor que aloca um espaço específico para um DataBuffer
+     * @param total_bytes Total de Bytes que será alocado.
+     * @throws std::runtime_error Caso o arquivo não possa ser aberto ou lido.
+     */
+    DataBuffer(const size_t& total_bytes) {
+        this->__file_size = total_bytes;
+        this->__total_bits = this->__file_size * 8;
+        this->__data = std::make_unique<uint8_t[]>(this->__file_size);
+        // Não preencheremos porque julgo não necessário
+    }
+
+    /**
      * @brief Recupera o valor de um bit específico na sequência global.
      * @details
      * Utiliza operações de bitwise (deslocamento e máscara) para extrair o bit
@@ -73,6 +85,26 @@ public:
         uint8_t bit_pos = 7 - (bit_index % 8);
 
         return (this->__data[byte_idx] >> bit_pos) & 1;
+    }
+
+    /**
+     * @brief Define o valor de um bit específico.
+     * @param bit_index Índice do bit.
+     * @param value Valor a ser definido (0 ou 1).
+     */
+    inline void set_bit(size_t bit_index, uint8_t value) {
+        if (bit_index >= this->__total_bits) {
+            return;
+        }
+
+        size_t byte_idx = bit_index / 8;
+        uint8_t bit_pos = 7 - (bit_index % 8);
+
+        if (value) {
+            this->__data[byte_idx] |= (1 << bit_pos);  // Define como 1
+        } else {
+            this->__data[byte_idx] &= ~(1 << bit_pos); // Define como 0
+        }
     }
 
     /**

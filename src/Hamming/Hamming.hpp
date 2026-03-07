@@ -71,10 +71,6 @@ public:
 
     /**
      * @brief Codifica um DataBuffer de entrada gerando um novo com palavras-código.
-     * @details
-     * O processo divide a sequência de bits original em blocos de tamanho 'k'
-     * (linhas da matriz), realiza a multiplicação matricial pela matriz geradora G
-     * (k x n) e aplica a operação módulo 2 para obter a palavra-código de 'n' bits.
      * @param input Referência para o data_buffer contendo os dados originais.
      * @return std::unique_ptr<data_buffer> Ponteiro para o novo buffer codificado.
      */
@@ -88,25 +84,25 @@ public:
 
         std::unique_ptr<DataBuffer> output = std::make_unique<DataBuffer>(total_output_bits / 8);
 
-        for(size_t b = 0; b < numblocks; ++b){
+        for(size_t b = 0; b < numblocks; ++b) {
+            // Para cada coluna 'j' da matriz geradora (cada bit da palavra-código de saída)
+            for(size_t j = 0; j < n_bits; ++j) {
+                int accumulator = 0;
 
-            /* Criamos e Populamos um Vetor de Modo Compatível com Eigen */
-            // Usamos int para evitar overflow
-            Eigen::VectorXi data_vector(k_bits);
+                // Multiplicação da linha de dados pela coluna 'j' da matriz G
+                for(size_t i = 0; i < k_bits; ++i) {
+                    size_t bit_idx = b * k_bits + i;
 
-            for(size_t i = 0; i < k_bits; ++i){
-                size_t bit_idx = b * k_bits + i;
-                data_vector(i) = (bit_idx < total_input_bits) ? input.get_bit(bit_idx) : 0;
-            }
+                    // Pegamos o bit "on-the-fly" do buffer original
+                    uint8_t data_bit = (bit_idx < total_input_bits) ? input.get_bit(bit_idx) : 0;
 
-            /* Operação Hamming */
-            // Usamos int para precisão
-            Eigen::VectorXi codeword = (data_vector.transpose() * this->__generator_matrix.cast<int>());
+                    // Operação de produto: data_bit * G(i, j)
+                    // Como data_bit é 0 ou 1, isso equivale a um AND lógico ou uma soma condicional
+                    accumulator += data_bit * this->__generator_matrix(i, j);
+                }
 
-            /* Populamos o DataBuffer de Saída */
-            for (size_t i = 0; i < n_bits; ++i) {
-                uint8_t bit_final = static_cast<uint8_t>(codeword(i) % 2);
-                output->set_bit(b * n_bits + i, bit_final);
+                // Aplica o módulo 2 (GF2) e seta o bit diretamente no destino
+                output->set_bit(b * n_bits + j, static_cast<uint8_t>(accumulator % 2));
             }
         }
 

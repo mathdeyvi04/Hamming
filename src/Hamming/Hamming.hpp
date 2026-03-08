@@ -72,11 +72,11 @@ public:
         size_t m = cols - rows;
         this->__parity_matrix.resize(m, cols);
 
-        for(int i = 0; i < m; ++i){
-            for(int j = 0; j < rows; ++j){
+        for(size_t i = 0; i < m; ++i){
+            for(size_t j = 0; j < rows; ++j){
                 this->__parity_matrix(i, j) = this->__generator_matrix(j, rows + i);
             }
-            for(int j = rows; j < cols; j++){
+            for(size_t j = rows; j < cols; j++){
                 this->__parity_matrix(i, j) = ((j - rows) == i) ? 1 : 0;
             }
         }
@@ -107,7 +107,7 @@ public:
         size_t numblocks = (total_input_bits + k_bits - 1) / k_bits;
         size_t total_output_bits = numblocks * n_bits;
 
-        std::unique_ptr<DataBuffer> output = std::make_unique<DataBuffer>(total_output_bits / 8);
+        std::unique_ptr<DataBuffer> output = std::make_unique<DataBuffer>(total_output_bits);
 
         for(size_t b = 0; b < numblocks; ++b) {
             // Para cada coluna 'j' da matriz geradora (cada bit da palavra-código de saída)

@@ -54,12 +54,11 @@ public:
 
     /**
      * @brief Construtor que aloca um espaço específico para um DataBuffer
-     * @param total_bytes Total de Bytes que será alocado.
-     * @throws std::runtime_error Caso o arquivo não possa ser aberto ou lido.
+     * @param total_bits Total de Bits que será alocado.
      */
-    DataBuffer(const size_t& total_bytes) {
-        this->__file_size = total_bytes;
-        this->__total_bits = this->__file_size * 8;
+    DataBuffer(const size_t& total_bits) {
+        this->__total_bits = total_bits;
+        this->__file_size = (total_bits + 7) / 8;
         this->__data = std::make_unique<uint8_t[]>(this->__file_size);
         // Não preencheremos porque julgo não necessário
     }

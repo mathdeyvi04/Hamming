@@ -130,6 +130,18 @@ public:
         );
     }
 
+
+    void save(const std::string& path) const {
+        std::ofstream file(path, std::ios::binary);
+
+        file.write(
+            reinterpret_cast<const char*>(this->__data.get()),
+            this->__file_size
+        );
+
+        file.close();
+    }
+
     /**
      * @brief Imprime no console uma sequência de bits para fins de depuração.
      * @details

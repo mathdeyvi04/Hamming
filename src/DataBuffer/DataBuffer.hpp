@@ -119,6 +119,18 @@ public:
     size_t get_file_size() const { return this->__file_size; }
 
     /**
+     * @brief Sobrescreve o conteúdo deste buffer com os dados de outro, sem realocar memória.
+     * @param other O buffer de origem (deve ter o mesmo tamanho).
+     */
+    void copy_from(const DataBuffer& other){
+        std::copy(
+            other.__data.get(),
+            other.__data.get() + other.__file_size,
+            this->__data.get()
+        );
+    }
+
+    /**
      * @brief Imprime no console uma sequência de bits para fins de depuração.
      * @details
      * É garantido que não haverão erros no caso de count ser maior que o total de bits

@@ -8,6 +8,13 @@
 #include "../NoiseChannel/NoiseChannel.hpp"
 #include "../Hamming/Hamming.hpp"
 
+/**
+ * @brief Classe responsável por gerenciar e coordenar simulações de transmissão digital.
+ *
+ * A classe Manager fornece métodos estáticos para:
+ * - Cálculo da taxa de erro de bit (BER)
+ * - Execução de simulações completas de transmissão com codificação Hamming
+ */
 class Manager {
 public:
     /**
@@ -44,6 +51,16 @@ public:
      */
     static void execute(const double& SNR_DB, const DataBuffer& input){
 
+#ifdef WITHOUT_CODIF
+        DataBuffer output(input.get_total_bits());
+        output.copy_from(input);
+
+        NoiseChannel::transmit(output, SNR_DB);
+
+        output.save("result.out");
+
+        std::cout << "BER -> " << Manager::calculate_ber(input, output) << std::endl;
+#else
         const int MAX_QUANT_BITS_SHOW = 20;
 
         std::cout << "Enviei: ";
@@ -72,5 +89,6 @@ public:
         received_bits->save("result.out");
 
         std::cout << "BER -> " << Manager::calculate_ber(input, *received_bits) << std::endl;
+#endif
     }
 };

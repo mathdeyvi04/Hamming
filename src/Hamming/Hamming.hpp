@@ -23,10 +23,10 @@ public:
      * @brief Construtor que carrega a matriz geradora a partir de um arquivo .txt.
      * @details
      * O arquivo deve conter a matriz em formato de texto, ex:
-     * 1 0 0 0 1 1 0
-     * 0 1 0 0 1 0 1
+     * 1 0 0 0 1 1 0 \\
+     * 0 1 0 0 1 0 1 \\
      * ...
-     * @param matrix_path Caminho para o arquivo .txt da matriz.
+     * @param matrix_path Caminho para o arquivo .txt da matriz geradora.
      */
     Hamming(const std::string& matrix_path) {
         std::ifstream file(matrix_path);

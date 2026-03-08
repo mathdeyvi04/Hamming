@@ -1,6 +1,9 @@
 all:
 	g++ -O3 -march=native src/main.cpp -o main
 
+without_codif:
+	g++ -O3 -march=native -DWITHOUT_CODIF src/main.cpp -o main_without_codif
+
 debug:
 	g++ -g3 -O0 -Wall -fno-inline src/main.cpp -o main
 

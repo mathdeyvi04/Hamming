@@ -49,6 +49,20 @@ O primeiro argumento deve ser numérico, correspondente ao SNR_db do sinal.
 
 O segundo argumento pode ser o nome de um arquivo QUALQUER presente no mesmo diretório ou uma sequência de bits digitada pelo usuário.
 
+## Possibilidades de Melhoria
+
+- Bit Window
+
+Apesar de não ter testado, considerando que o arquivo de entrada é carregado na RAM, é impossível executarmos a aplicação
+com arquivos de mais de 15 GB. Sendo assim, o ideal seria utilizarmos a ideia de Bit Window a fim de varrermos o arquivo 
+a partir de janelas de visualização.
+
+- Multithreading
+
+Observe que a codificação de um bloco de bits é independente de outros blocos. Sendo assim, para arquivos grandes
+como mais de 500 MB, seria interessante a utilização de threads para varrer o arquivo completamente. Por exemplo, 2 threads 
+já poderiam varrer metade do arquivo cada uma, o que já seria um aprimoramento.
+
 ## Resultados
 
 Imagem original a sofrer os testes.
